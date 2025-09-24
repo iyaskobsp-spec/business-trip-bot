@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime, timedelta
 from typing import Optional
@@ -27,7 +28,17 @@ SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_JSON, scopes=SCOPES)
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+
+# Підтримка і файлу, і JSON-рядка в змінній середовища
+if SERVICE_ACCOUNT_JSON.strip().startswith("{"):
+    info = json.loads(SERVICE_ACCOUNT_JSON)
+    creds = Credentials.from_service_account_info(info, scopes=SCOPES)
+else:
+    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_JSON, scopes=SCOPES)
 gc = gspread.authorize(creds)
 
 # Sheets
